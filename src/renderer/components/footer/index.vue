@@ -1,7 +1,5 @@
 <template>
-    <el-container>
-        <el-footer></el-footer>
-    </el-container>
+    <el-footer></el-footer>
 </template>
 <script>
     export default {}

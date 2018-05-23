@@ -1,30 +1,34 @@
 <template>
- <div>
-     <Header></Header>
-     <div>
-         <asideMenu></asideMenu>
-         <el-container>
-             <el-main>
-                 <router-view></router-view>
-             </el-main>
+ <div class="container">
+     <el-container direction="vertical">
+         <Header></Header>
+         <el-container direction="vertical">
+             <el-container>
+                 <asideMenu></asideMenu>
+                 <el-main>
+                     <router-view></router-view>
+                 </el-main>
+             </el-container>
+             <Footer></Footer>
          </el-container>
-     </div>
-     <Footer></Footer>
+     </el-container>
  </div>
 </template>
 <script>
-    import Header from "../components/header"
-    import Footer from "../components/footer"
-    import AsideMenu from "../components/asidemenu"
-    import ElContainer from "../../../node_modules/element-ui/packages/container/src/main.vue";
-    import ElMain from "../../../node_modules/element-ui/packages/main/src/main.vue";
+    import Header from '../components/header'
+    import Footer from '../components/footer'
+    import AsideMenu from '../components/asidemenu'
     export default {
-        components: {
-            ElMain,
-            ElContainer,
-            header,
-            footer,
-            asideMenuH
-        }
+      components: {
+        Header,
+        Footer,
+        AsideMenu
+      }
     }
 </script>
+<style lang="less">
+    .container {
+        width:100%;
+        height:100%;
+    }
+</style>
