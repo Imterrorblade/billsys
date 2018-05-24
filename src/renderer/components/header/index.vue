@@ -1,24 +1,77 @@
 <template>
-    <el-header class="">
-        <span class="" v-if="username">
-            <span>{{username}}</span>
-            <span><i></i></span>
-        </span>
-        <span class="" v-if="!username">
-            <span><router-link to="/login">登录</router-link></span>
-            <span><router-link to="/regist">注册</router-link></span>
-        </span>
+    <el-header class="header">
+        <el-col :span="24">
+            <el-col :span="10" class="logo logo-width" >
+                账目管理工具
+            </el-col>
+            <el-col :span="4" class="userinfo">
+                <span class="userinfo-inner"><i class=""></i>{{username}}</span>
+            </el-col>
+        </el-col>
     </el-header>
 </template>
 <script>
   export default {
     data () {
       return {
-        username: ''
+        username: '杨**'
       }
     }
   }
 </script>
-<style >
-
+<style lang="less">
+    @import "../../style/config";
+    .header {
+        height: 60px;
+        line-height: 60px;
+        background: @color-primary;
+        color: #fff;
+        .userinfo {
+            text-align: right;
+            padding-right: 35px;
+            float: right;
+            .userinfo-inner {
+                cursor: pointer;
+                color: #fff;
+                img {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 20px;
+                    margin: 10px 0px 10px 10px;
+                    float: right;
+                }
+            }
+        }
+        .logo {
+            //width:230px;
+            height: 60px;
+            font-size: 22px;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-color: rgba(238, 241, 146, 0.3);
+            border-right-width: 1px;
+            border-right-style: solid;
+            img {
+                width: 40px;
+                float: left;
+                margin: 10px 10px 10px 18px;
+            }
+            .txt {
+                color: #fff;
+            }
+        }
+        .logo-width {
+            width: 230px;
+        }
+        .logo-collapse-width {
+            width: 60px
+        }
+        .tools {
+            padding: 0px 23px;
+            width: 14px;
+            height: 60px;
+            line-height: 60px;
+            cursor: pointer;
+        }
+    }
 </style>

@@ -17,6 +17,10 @@ export default new Router({
         path: 'test',
         name: 'test',
         component: require('@/page/test').default
+      }, {
+        path: 'billlist',
+        name: 'billlist',
+        component: require('@/page/billlist').default
       }]
     }
   ]
