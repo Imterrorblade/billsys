@@ -1,29 +1,22 @@
 <template>
-    <el-container>
-        <el-aside width="200px">
-            <el-menu v-if="menu in menuList">
-                <router-link :to="menu.link">{{menu.label}}</router-link>
-            </el-menu>
-        </el-aside>
-    </el-container>
+    <el-aside width="200px">
+        <el-menu :default-opened="['1', '3']">
+            <el-menu-item v-for="(menu, index) in menuList" :index="index">{{menu.label}}</el-menu-item>
+        </el-menu>
+    </el-aside>
 </template>
 <script>
-    import ElContainer from "../../../../node_modules/element-ui/packages/container/src/main.vue"
-    export default {
-        data(){
-            return {
-                menuList: [{
-                    label: "账单查询",
-                    link: "/billrecords"
-                }, {
-                    label: "个人资料",
-                    link: "/userinfo"
-                }]
-            }
-        },
-        components: {
-            ElContainer,
-            RouterLink
-        }
+  export default {
+    data () {
+      return {
+        menuList: [{
+          label: '账单查询',
+          link: '/page/billlist'
+        }, {
+          label: '个人资料',
+          link: '/userinfo'
+        }]
+      }
     }
+  }
 </script>
