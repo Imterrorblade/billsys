@@ -14,11 +14,11 @@
 
         <!--列表-->
         <el-col :span="24" class="bill-table">
-            <el-table  :data="dataList" highlight-current-row v-loading="listLoading" @selection-change="selsChange"
-                       style="width: 100%;">
+            <el-table :data="dataList" highlight-current-row v-loading="listLoading" @selection-change="selsChange"
+                      style="width: 100%;">
                 <el-table-column type="selection" width="55">
                 </el-table-column>
-                <el-table-column prop="date" label="日期" width="250" sortable>
+                <el-table-column prop="date" label="日期" width="250" :formatter="formatTableDate" sortable>
                 </el-table-column>
                 <el-table-column prop="content" label="商品" min-width="200" sortable>
                 </el-table-column>
@@ -41,45 +41,17 @@
             </el-pagination>
         </el-col>
 
-        <!--编辑界面-->
-        <el-dialog title="编辑" v-model="editFormVisible" :close-on-click-modal="false">
-            <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
-                <el-form-item label="姓名" prop="name">
-                    <el-input v-model="editForm.name" auto-complete="off"></el-input>
-                </el-form-item>
-                <el-form-item label="性别">
-                    <el-radio-group v-model="editForm.sex">
-                        <el-radio class="radio" :label="1">男</el-radio>
-                        <el-radio class="radio" :label="0">女</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="年龄">
-                    <el-input-number v-model="editForm.age" :min="0" :max="200"></el-input-number>
-                </el-form-item>
-                <el-form-item label="生日">
-                    <el-date-picker type="date" placeholder="选择日期" v-model="editForm.birth"></el-date-picker>
-                </el-form-item>
-                <el-form-item label="地址">
-                    <el-input type="textarea" v-model="editForm.addr"></el-input>
-                </el-form-item>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button @click.native="editFormVisible = false">取消</el-button>
-                <el-button type="primary" @click.native="editSubmit" :loading="editLoading">提交</el-button>
-            </div>
-        </el-dialog>
-
-        <!--新增界面-->
-        <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+        <!--新增或者编辑界面-->
+        <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
             <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-                <el-form-item label="生日">
+                <el-form-item label="日期" prop="date">
                     <el-date-picker type="date" placeholder="选择日期" v-model="addForm.date"></el-date-picker>
                 </el-form-item>
-                <el-form-item label="商品">
-                    <el-input type="textarea" v-model="addForm.content"></el-input>
-                </el-form-item>
-                <el-form-item label="售价">
+                <el-form-item label="售价" prop="money">
                     <el-input-number v-model="addForm.money" :min="0" :max="200000"></el-input-number>
+                </el-form-item>
+                <el-form-item label="商品" prop="content">
+                    <el-input type="textarea" v-model="addForm.content"></el-input>
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
@@ -91,6 +63,9 @@
 </template>
 
 <script>
+  import Util from '../../common/js/util'
+  import service from '../../service'
+
   export default {
     data () {
       return {
@@ -98,19 +73,19 @@
           name: ''
         },
         dataList: [{
-          date: '2018-05-24',
+          date: new Date(),
           content: '轴，轮胎',
           money: 105
         }, {
-          date: '2018-05-24',
+          date: new Date(),
           content: '轴，轮胎',
           money: 105
         }, {
-          date: '2018-05-24',
+          date: new Date(),
           content: '轴，轮胎',
           money: 105
         }, {
-          date: '2018-05-24',
+          date: new Date(),
           content: '轴，轮胎',
           money: 105
         }],
@@ -118,60 +93,63 @@
         page: 1,
         listLoading: false,
         sels: [], // 列表选中列
-
-        editFormVisible: false, // 编辑界面是否显示
-        editLoading: false,
-        editFormRules: {
-          name: [
-            {required: true, message: '请输入姓名', trigger: 'blur'}
-          ]
-        },
-        // 编辑界面数据
-        editForm: {
-          id: 0,
-          name: '',
-          sex: -1,
-          age: 0,
-          birth: '',
-          addr: ''
-        },
-
         addFormVisible: false, // 新增界面是否显示
         addLoading: false,
         addFormRules: {
           date: [
-            {required: true, message: '请选择日期', trigger: 'blur'}
+            {type: 'date', required: true, message: '请选择日期', trigger: 'blur'}
           ],
           content: [
             {required: true, message: '请填写所售商品', trigger: 'blur'}
           ],
           money: [
-            {required: true, message: '请填写所售价格', trigger: 'blur'}
+            {required: true, message: '请填写所售价格', trigger: 'submit'}
           ]
         },
         // 新增界面数据
         addForm: {
-          content: '',
+          content: null,
           date: new Date(),
           money: 0
         }
       }
     },
+    components: {
+      Util,
+      service
+    },
     methods: {
+      formatTableDate (row, column, value, index) {
+        return Util.formatDate.format(value)
+      },
       handleCurrentChange (val) {
         this.page = val
         this.getUsers()
       },
       // 获取账单数据
       getDataList () {
+        service.getBillList().then((res) => {
+          console.log(res)
+        })
       },
       // 删除
       handleDel: function (index, row) {
+        this.$confirm('确认删除该记录吗?', '提示', {
+          type: 'warning'
+        }).then(() => {
+          this.listLoading = true
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+          this.listLoading = false
+        }).catch(() => {
+        })
       },
-      // 显示编辑界面
+      // 显示编辑界面add
       handleEdit: function (index, row) {
-        this.editFormVisible = true
-        this.editForm = Object.assign({}, row)
+        this.addFormVisible = true
+        this.addForm = Object.assign({}, row)
       },
       // 显示新增界面
       handleAdd: function () {
@@ -182,30 +160,50 @@
           money: 0
         }
       },
-      // 编辑
-      editSubmit: function () {
-      },
       // 新增
       addSubmit: function () {
+        this.$refs.addForm.validate().then(() => {
+          this.addLoading = true
+          service.addBill(this.addForm).then((res) => {
+            console.log('成功')
+            this.addLoading = false
+            this.addFormVisible = false
+          })
+        }, function (err) {
+          console.log(err)
+        })
       },
       selsChange: function (sels) {
         this.sels = sels
       },
       // 批量删除
       batchRemove: function () {
-
+        let ids = this.sels.map(item => item.id).toString()
+        this.$confirm('确认删除选中记录吗？', '提示', {
+          type: 'warning'
+        }).then(() => {
+          console.log(ids)
+          this.listLoading = true
+          this.listLoading = false
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          })
+        }).catch(() => {
+        })
       }
     },
     mounted () {
+      this.getDataList()
     }
   }
 </script>
 <style lang="less">
-    .bill-table{
-      .el-table {
-          th,td {
-              padding: 8px 0;
-          }
-      }
+    .bill-table {
+        .el-table {
+            th, td {
+                padding: 8px 0;
+            }
+        }
     }
 </style>

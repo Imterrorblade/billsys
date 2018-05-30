@@ -11,6 +11,7 @@ const webpackHotMiddleware = require('webpack-hot-middleware')
 
 const mainConfig = require('./webpack.main.config')
 const rendererConfig = require('./webpack.renderer.config')
+const dataBase = require('../mongodb/index.js');
 
 let electronProcess = null
 let manualRestart = false
@@ -173,6 +174,7 @@ function init () {
     .catch(err => {
       console.error(err)
     })
+  dataBase.start()
 }
 
 init()

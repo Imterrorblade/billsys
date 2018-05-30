@@ -7,7 +7,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/page/test'
+      redirect: '/page/billlist'
     },
     {
       path: '/page',
